@@ -48,8 +48,8 @@ class SqsLauncher(object):
             raise EnvironmentError('Environment variable `AWS_ACCOUNT_ID` not set and no role found.')
         
         # new session for each instantiation
-        self._region_name = kwargs.get('region_name', self._session.region_name)
         self._session = boto3.session.Session()
+        self._region_name = kwargs.get('region_name', self._session.region_name)
         self._client = self._session.client('sqs', region_name=self._region_name)
 
         self._queue_name = queue
