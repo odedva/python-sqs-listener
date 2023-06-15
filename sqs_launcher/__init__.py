@@ -27,7 +27,7 @@ sqs_logger = logging.getLogger('sqs_listener')
 
 class SqsLauncher(object):
 
-    def __init__(self, queue=None, queue_url=None, create_queue=False, visibility_timeout='600', serializer=json.dumps):
+    def __init__(self, queue=None, queue_url=None, create_queue=False, visibility_timeout='600', serializer=json.dumps, **kwargs):
         """
         :param queue: (str) name of queue to listen to
         :param queue_url: (str) url of queue to listen to
@@ -48,8 +48,9 @@ class SqsLauncher(object):
             raise EnvironmentError('Environment variable `AWS_ACCOUNT_ID` not set and no role found.')
         
         # new session for each instantiation
+        self._region_name = kwargs.get('region_name', self._session.region_name)
         self._session = boto3.session.Session()
-        self._client = self._session.client('sqs')
+        self._client = self._session.client('sqs', region_name=self._region_name)
 
         self._queue_name = queue
         self._queue_url = queue_url
